@@ -8,9 +8,14 @@
   <title>{{ config('app.name') }}</title>
   @vite('resources/css/app.css')
 </head>
-<body
-{{--  class="bg-[#1A72A2]"--}}
->
+<body class="min-h-screen"
+      style="background: linear-gradient(
+      to bottom,
+      #020617 0%, #020617 55%,
+      #1e3a8a 55%, #1e3a8a 75%,
+      #3b82f6 75%, #3b82f6 90%,
+      #93c5fd 90%, #93c5fd 100%
+      );">
   <x-header/>
   {{ $slot }}
   <x-footer/>
