@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+//regras de validação separada do request
 
 class LoginController extends Controller
 {
@@ -15,12 +18,11 @@ class LoginController extends Controller
     }
 
     //receber os dados
-    public function authenticate(Request $request)
+    public function authenticate(LoginRequest $request)
     {
-        $credentials = $request -> validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:6']
-        ]);
+        //dd é dump
+        //dd($request->all());
+        $credentials = $request->only('email', 'password');
 
         //validando se as credenciais são v/f
         if(Auth::attempt($credentials)){

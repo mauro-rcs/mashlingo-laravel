@@ -6,47 +6,57 @@
       </h1>
     </div>
 
-    <div class="flex justify-center">
-      {{--se der erro do email:--}}
-      @error('email')
-      <p class="text-red-500 text-xl mt-1">
-        {{ $message }}
-      </p>
-      @enderror
-    </div>
-
-    <section class="mt-5">
+    <section class="mt-4">
       <form action="/login"
             method="POST"
-            class="flex flex-col items-center gap-3 w-fit border-2 mx-auto px-3 py-2 bg-white">
+            class="bg-white max-w-[600px] mx-auto p-10 border-2 mt-4 items-center">
         @csrf
+        <h1 class="text-3xl font-bold">
+          Realize Login
+        </h1>
+        <p>
+          Insira seus dados para acessar
+        </p>
 
         <p>
           <label for="email" class="font-bold">Email</label><br>
           <input type="email"
                  name="email"
                  placeholder="seuemail@gmail.com"
-                 required
-                 class="bg-white p-2 border-2 w-80 font-bold">
+                 class="bg-white p-2 border-2 w-full font-bold @error('email') border-red-500 @enderror">
         </p>
+
+        @error('email')
+        <p class="text-red-600">
+          {{ $message }}
+        </p>
+
+        @enderror
 
         <p>
           <label for="password" class="font-bold">Senha</label><br>
           <input type="password"
                  name="password"
-                 required
                  placeholder="******"
-                 class="bg-white p-2 border-2 w-80">
+                 class="bg-white p-2 border-2 w-full font-bold @error('password') border-red-500 @enderror">
         </p>
+
+        @error('password')
+        <p class="text-red-600">
+          {{ $message }}
+        </p>
+
+        @enderror
 
         <p>
-          <input type="submit"
-                 value="Enviar"
-                 class="bg-teal-400 font-bold px-3 py-2 shadow-2xl border-2">
+          <button
+            type="submit"
+            class="bg-teal-400 mt-4 font-bold w-full px-3 py-2 shadow-2xl border-2 hover:bg-teal-500"
+          >
+            Enviar
+          </button>
         </p>
-
       </form>
     </section>
-
   </main>
 </x-layout>
