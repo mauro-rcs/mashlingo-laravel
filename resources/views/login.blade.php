@@ -1,13 +1,13 @@
 <x-layout>
   <main class="py-10">
     <div class="flex justify-center">
-      <h1 class="font-bold text-3xl bg-teal-400 px-8 py-3 shadow-md border-2">
-        < Login />
+      <h1 class="font-bold text-3xl bg-[#61B6D8] px-8 py-3 shadow-md border-2">
+        Login
       </h1>
     </div>
 
     <section class="mt-4">
-      <form action="/login"
+      <form action="{{route('auth.login')}}"
             method="POST"
             class="bg-white max-w-[600px] mx-auto p-10 border-2 mt-4 items-center">
         @csrf
@@ -22,7 +22,7 @@
           <label for="email" class="font-bold">Email</label><br>
           <input type="email"
                  name="email"
-                 placeholder="seuemail@gmail.com"
+                 placeholder="exemplo@email.com"
                  class="bg-white p-2 border-2 w-full font-bold @error('email') border-red-500 @enderror">
         </p>
 
@@ -30,7 +30,6 @@
         <p class="text-red-600">
           {{ $message }}
         </p>
-
         @enderror
 
         <p>
@@ -45,16 +44,23 @@
         <p class="text-red-600">
           {{ $message }}
         </p>
-
         @enderror
 
         <p>
           <button
             type="submit"
-            class="bg-teal-400 mt-4 font-bold w-full px-3 py-2 shadow-2xl border-2 hover:bg-teal-500"
+            class="bg-[#61B6D8] mt-4 font-bold w-full px-3 py-2 shadow-2xl border-2 hover:bg-[#4a9bc2] transition"
           >
             Enviar
           </button>
+        </p>
+
+        <p class="text-center mt-3">
+          Ainda não tem uma conta?
+          <a href="{{route('site.register')}}"
+             class="underline hover:opacity-50 transition">
+            Registre-se
+          </a>
         </p>
       </form>
     </section>
