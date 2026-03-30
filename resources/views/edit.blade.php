@@ -7,14 +7,6 @@
       </h1>
     </div>
 
-    <div class="flex justify-center">
-        @session('success')
-        <h1 class="font-bold mt-5 text-xl text-white border-black bg-[#082A45] px-8 py-3 shadow-md border-2">
-          {{session('success')}}
-        </h1>
-        @endsession
-      </div>
-
     <form action="{{route('user.update', $user->id)}}"
           method="post"
           enctype="multipart/form-data">
@@ -26,7 +18,6 @@
           <h2 class="text-2xl font-bold mb-4">
             Meus Dados Pessoais
           </h2>
-
 
           <div class="grid grid-cols-2 gap-4">
             <div>

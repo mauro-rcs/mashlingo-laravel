@@ -8,16 +8,11 @@
   <title>{{ config('app.name') }}</title>
   @vite('resources/css/app.css')
 </head>
-<body class="min-h-screen bg-black">
-{{--      style="background: linear-gradient(--}}
-{{--      to bottom,--}}
-{{--      #020617 0%, #020617 55%,--}}
-{{--      #1e3a8a 55%, #1e3a8a 75%,--}}
-{{--      #3b82f6 75%, #3b82f6 90%,--}}
-{{--      #93c5fd 90%, #93c5fd 100%--}}
-{{--      );">--}}
+<body class="min-h-screen bg-gradient-to-r from-[#08151A] to-[#0961A5] flex flex-col">
   <x-header/>
-  {{ $slot }}
+  <main class="flex-grow">
+    {{ $slot }}
+  </main>
   <x-footer/>
 </body>
 </html>

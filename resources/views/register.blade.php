@@ -1,7 +1,7 @@
 <x-layout>
   <main class="py-10">
     <div class="flex justify-center">
-      <h1 class="font-bold text-3xl bg-[#0961A5] px-8 py-3 shadow-md border-2">
+      <h1 class="font-bold text-3xl bg-[#3598CA] px-8 py-3 shadow-md border-2">
         Cadastro
       </h1>
     </div>
@@ -81,7 +81,7 @@
 
         <p>
           <button type="submit"
-                  class="bg-[#61B6D8] mt-4 font-bold w-full px-3 py-2 shadow-2xl border-2 hover:bg-[#4a9bc2] transition">
+                  class="bg-[#3598CA] mt-4 font-bold w-full px-3 py-2 shadow-2xl border-2 hover:bg-[#2F8BB9] transition">
             Cadastrar
           </button>
         </p>

@@ -23,6 +23,10 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $guarded = [
+        'is_admin',
+    ];
+
     protected function casts(): array
     {
         return [
