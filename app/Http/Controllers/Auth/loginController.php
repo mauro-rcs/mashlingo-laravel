@@ -30,7 +30,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             //envia pra home
-            return redirect()->intended(route('site.dashboard'));
+            return redirect()->intended(route('site.perfil'));
         }
 
         return back()->withErrors([

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\siteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
 //SITE
 Route::get('/', [siteController::class, 'index'])->name('site.index');
@@ -9,8 +10,27 @@ Route::get('/', [siteController::class, 'index'])->name('site.index');
 //AUTH
 Route::middleware('auth')->group(function () {
     //DASHBOARD
-    Route::get('/dashboard', [siteController::class, 'dashboard'])->name('site.dashboard');
+    Route::get('/perfil', [siteController::class, 'perfil'])->name('site.perfil');
+    Route::get('/taskboard', [siteController::class, 'taskboard'])->name('site.taskboard');
     Route::get('/admin', [siteController::class, 'admin'])->name('site.admin');
+
+    //ESCRITA
+    Route::get('/escrita', [SiteController::class, 'escrita'])
+        ->name('site.escrita');
+
+    Route::get('/escrita/licao/{lesson}', [SiteController::class, 'writingLesson'])
+        ->name('writing.lesson');
+
+    Route::post('/escrita/licao/{lesson}/complete', [SiteController::class, 'completeLesson'])
+        ->name('writing.complete');
+
+    Route::get('/escrita/licao/{lesson}', [siteController::class, 'licao'])
+        ->name('writing.lesson');
+
+    Route::get(
+        '/escrita/licao/{lesson}',
+        [WritingController::class, 'show']
+    )->name('writing.lesson');
 
     //LOGOUT
     Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('auth.logout');

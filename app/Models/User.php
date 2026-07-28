@@ -13,18 +13,15 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
         'data_nasc',
         'bio',
         'foto_perfil',
-        'xp',
     ];
 
     protected $hidden = [
         'password',
-    ];
-
-    protected $guarded = [
-        'is_admin',
+        'remember_token',
     ];
 
     protected function casts(): array
@@ -32,6 +29,13 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'data_nasc' => 'date',
         ];
+    }
+
+    public function writingProgress()
+    {
+        return $this->hasMany(WritingProgress::class);
     }
 }

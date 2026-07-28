@@ -1,9 +1,15 @@
 <x-layout>
-  <div class="max-w-4xl mx-auto w-full my-auto z-10">
+  <div class="w-full max-w-4xl mx-auto my-auto z-10">
 
-    <div class="bg-[#051d31] p-8 md:p-10 rounded-[2.5rem] shadow-2xl border border-white/5 relative">
+    @session('success')
+    <div class="mb-6 w-full text-center font-bold bg-[#3598CA] text-white px-6 py-3 rounded-2xl shadow-lg border border-white/20">
+      {{ session('success') }}
+    </div>
+    @endsession
+
+    <div class="w-full bg-[#051d31] p-8 md:p-10 rounded-[2.5rem] shadow-2xl border border-white/5 relative">
       <header class="mb-8 border-b border-white/10 pb-4 flex justify-between items-center">
-        <h1 class="text-2xl font-black tracking-wide">Editar Usuário</h1>
+        <h1 class="text-2xl font-black tracking-wide">Meu Perfil</h1>
         <div class="bg-[#03111d] px-4 py-1.5 rounded-full font-bold text-cyan-400 border border-white/5">
           XP: <span class="text-white">{{ $user->xp ?? 0 }} pts</span>
         </div>
@@ -14,10 +20,8 @@
         @method('PUT')
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-
           <div class="md:col-span-7 space-y-5">
-            <h2 class="font-extrabold uppercase tracking-wider text-gray-400">Dados Pessoais</h2>
-
+            <h2 class="font-extrabold uppercase tracking-wider text-gray-400">Conta & Dados</h2>
             <div class="space-y-1">
               <label for="name" class="block font-bold text-gray-200">Nome:</label>
               <div class="relative flex items-center">
@@ -71,7 +75,6 @@
           <div class="md:col-span-5 space-y-6">
             <div class="bg-[#03111d]/50 p-5 rounded-3xl border border-white/5 text-center flex flex-col items-center space-y-3">
               <span class="font-bold text-gray-300">Foto de Perfil</span>
-
               @if($user->foto_perfil)
                 <img src="{{ asset('storage/' . $user->foto_perfil) }}" alt="Foto de perfil" class="w-24 h-24 rounded-full border-4 border-cyan-400 object-cover shadow-lg">
               @else
@@ -85,16 +88,32 @@
                 <input type="file" name="foto_perfil" class="hidden">
               </label>
             </div>
-          </div>
 
+            <div class="space-y-3 pt-2">
+              <h3 class="font-extrabold uppercase tracking-wider text-gray-400">Notificações</h3>
+              <div class="space-y-2 font-bold text-gray-200">
+                <label class="flex items-center justify-between cursor-pointer">
+                  <span>Todas</span>
+                  <input type="checkbox" checked class="accent-cyan-400 rounded w-4 h-4">
+                </label>
+                <label class="flex items-center justify-between cursor-pointer">
+                  <span>Desafios Diários</span>
+                  <input type="checkbox" checked class="accent-cyan-400 rounded w-4 h-4">
+                </label>
+                <label class="flex items-center justify-between cursor-pointer">
+                  <span>Lições Diárias</span>
+                  <input type="checkbox" checked class="accent-cyan-400 rounded w-4 h-4">
+                </label>
+                <label class="flex items-center justify-between cursor-pointer">
+                  <span>Ranking</span>
+                  <input type="checkbox" checked class="accent-cyan-400 rounded w-4 h-4">
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="mt-8 pt-4 border-t border-white/10 flex justify-end gap-3">
-          <a href="{{ route('site.admin') }}"
-             class="w-full md:w-auto bg-[#03111d] hover:bg-[#082a45] text-white font-extrabold px-8 py-3 rounded-2xl border border-white/10 shadow-xl text-center transition-all hover:scale-105 active:scale-95">
-            Cancelar
-          </a>
-
+        <div class="mt-8 pt-4 border-t border-white/10 flex justify-end">
           <button
             type="submit"
             class="w-full md:w-auto bg-[#3598CA] hover:bg-[#2F8BB9] text-white font-extrabold px-10 py-3 rounded-2xl shadow-xl transition-transform hover:scale-105 active:scale-95 cursor-pointer"
@@ -104,6 +123,5 @@
         </div>
       </form>
     </div>
-
   </div>
 </x-layout>

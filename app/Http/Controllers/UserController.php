@@ -50,9 +50,9 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        if(!auth()->user()->is_admin && $user->id !== auth()->id()){
-            abort(403, 'Você não pode alterar estes dados');
-        }
+//        if(!auth()->user()->is_admin && $user->id !== auth()->id()){
+//            abort(403, 'Você não pode alterar estes dados');
+//        }
 
         $user->update($request->all());
 
@@ -64,7 +64,7 @@ class UserController extends Controller
 
         if(!auth()->user()->is_admin){
         return redirect()
-            ->route('site.dashboard')
+            ->route('site.perfil')
             ->with('success', 'Dados atualizados com sucesso');
         }
 
