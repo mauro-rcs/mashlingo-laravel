@@ -18,14 +18,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/escrita', [SiteController::class, 'escrita'])
         ->name('site.escrita');
 
-    Route::get('/escrita/licao/{lesson}', [SiteController::class, 'writingLesson'])
+    Route::get('/escrita/licao/{lesson}', [SiteController::class, 'licao'])
         ->name('writing.lesson');
 
-    Route::post('/escrita/licao/{lesson}/complete', [SiteController::class, 'completeLesson'])
+    Route::post('/escrita/licao/{lesson}/complete', [SiteController::class, 'submitWritingLesson'])
         ->name('writing.complete');
-
-    Route::get('/escrita/licao/{lesson}', [siteController::class, 'licao'])
-        ->name('writing.lesson');
 
     Route::get(
         '/escrita/licao/{lesson}',
