@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-## use Illuminate\Http\Request;
-
-use Illuminate\View\View;
 use App\Models\WritingLesson;
 use App\Models\WritingProgress;
-use Prism\Prism\Facades\Prism;
-use Prism\Prism\Enums\Provider;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Facades\Prism;
 
 class siteController extends Controller
 {
-    public function index(){
-        $name = 'Mauro';
-        $habits = ['ler', 'estudar'];
+    public function index()
+    {
+        if (auth()->check()) {
+            return redirect()->route('site.taskboard');
+        }
 
-        return view('home', compact('name', 'habits'));
+        return view('home');
     }
 
     public function perfil(): View
@@ -27,9 +27,16 @@ class siteController extends Controller
         return view('perfil', compact('user'));
     }
 
+    public function taskboard()
+    {
+        $user = auth()->user();
+
+        return view('taskboard', compact('user'));
+    }
+
     public function admin()
     {
-        if (!auth()->check() || !auth()->user()->is_admin) {
+        if (!auth()->user()->is_admin) {
             abort(403);
         }
 
@@ -38,23 +45,11 @@ class siteController extends Controller
         return view('admin', compact('users'));
     }
 
-    //ESCRITA
-    public function taskboard()
-    {
-        $user = auth()->user();
-        $users = \App\Models\User::all();
-
-        return view('taskboard', compact('user'));
-    }
-
     public function escrita()
     {
-        return view('escrita');
-    }
+        $lessons = WritingLesson::orderBy('numero')->get();
 
-    public function writingLesson($lesson)
-    {
-        return view('escrita.licao', compact('lesson'));
+        return view('escrita', compact('lessons'));
     }
 
     public function completeLesson($lesson)
@@ -70,19 +65,15 @@ class siteController extends Controller
             ]
         );
 
-        return redirect()->route('site.escrita')
+        return redirect()
+            ->route('site.escrita')
             ->with('success', 'Lição concluída!');
     }
 
-    public function lesson(string $lesson)
-    {
-        $lesson->load('questions');
-
-        return view('escrita.licao', compact('licao'));
-    }
-
-    public function submitWritingLesson(Request $request, WritingLesson $lesson)
-    {
+    public function submitWritingLesson(
+        Request $request,
+        WritingLesson $lesson
+    ) {
         $request->validate([
             'answers' => ['required', 'array'],
         ]);
@@ -118,7 +109,10 @@ QUESTÕES:
 PROMPT;
 
         foreach ($lesson->questions as $question) {
-            $answer = $request->input("answers.{$question->id}", '');
+            $answer = $request->input(
+                "answers.{$question->id}",
+                ''
+            );
 
             $prompt .= <<<TEXT
 
@@ -127,14 +121,14 @@ Questão: {$question->ordem}
 Frase em português: {$question->frase_portugues}
 Gabarito: {$question->resposta_correta}
 Resposta do aluno: {$answer}
-
 TEXT;
         }
 
         $response = Prism::text()
             ->using(Provider::Ollama, 'llama3.1')
             ->withSystemPrompt(
-                'Você é um corretor de exercícios de inglês. Responda APENAS em JSON puro, sem blocos de código markdown ```json.'
+                'Você é um corretor de exercícios de inglês. ' .
+                'Responda APENAS em JSON puro, sem blocos de código markdown.'
             )
             ->withPrompt($prompt)
             ->withClientOptions([
@@ -144,22 +138,33 @@ TEXT;
 
         $rawText = trim($response->text);
 
-        // 1. Remove blocos de código markdown (```json ... ```) se existirem
-        $cleanJson = preg_replace('/^```(?:json)?\s*|\s*```$/i', '', $rawText);
-        $cleanJson = trim($cleanJson);
+        $cleanJson = preg_replace(
+            '/^```(?:json)?\s*|\s*```$/i',
+            '',
+            $rawText
+        );
 
-        // 2. Decodifica o JSON
-        $resultado = json_decode($cleanJson, true);
+        $resultado = json_decode(
+            trim($cleanJson),
+            true
+        );
 
-        // 3. Validação com mensagem legível
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            dd([
-                'erro_json' => json_last_error_msg(),
-                'texto_original' => $rawText,
-                'texto_limpo' => $cleanJson
-            ]);
+        if (
+            json_last_error() !== JSON_ERROR_NONE ||
+            !isset($resultado['questoes'])
+        ) {
+            return back()->with(
+                'error',
+                'Falha ao processar a resposta da IA. Tente novamente.'
+            );
         }
 
-        dd($resultado);
+        $feedback = collect($resultado['questoes'])
+            ->keyBy('id')
+            ->toArray();
+
+        return back()
+            ->with('feedback', $feedback)
+            ->with('old_answers', $request->input('answers'));
     }
 }

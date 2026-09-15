@@ -38,29 +38,14 @@
 
           <div class="grid grid-cols-4 gap-4 mb-10 w-full max-w-md place-items-center">
 
-            @for($i = 1; $i <= 1; $i++)
-              <a href="{{ route('writing.lesson', $i) }}"
-                 class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg hover:scale-105 transition-transform">
-                Aula {{ $i }}
+            @foreach($lessons as $lesson)
+              <a
+                href="{{ route('writing.lesson', $lesson) }}"
+                class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg hover:scale-105 transition-transform"
+              >
+                Aula {{ $lesson->numero }}
               </a>
-            @endfor
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
+            @endforeach
           </div>
 
           <div class="w-full flex justify-end">

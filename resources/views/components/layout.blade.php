@@ -11,8 +11,7 @@
 
 <x-header/>
 
-<main class="flex-grow flex flex-col justify-center items-center relative overflow-hidden bg-cover bg-center bg-no-repeat p-6"
-      style="background-image: url('{{ asset('images/bg.jpg') }}');">
+<main class="flex-grow flex flex-col justify-center items-center relative overflow-hidden p-6 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#07243b] via-[#083354] to-[#041726]">
 
   {{ $slot }}
 

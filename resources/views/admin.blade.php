@@ -1,7 +1,26 @@
 <x-layout>
   <div class="max-w-6xl mx-auto w-full my-auto z-10 space-y-6">
-    <header class="flex justify-between items-center pb-4">
-      <h1 class="text-2xl font-black tracking-wide">Painel de Admin</h1>
+    <header class="bg-[#051d31] p-6 md:p-8 rounded-[2.5rem] shadow-2xl relative flex flex-col md:flex-row justify-between items-center gap-4 pb-4">
+      <h1 class="text-2xl font-black tracking-wide">
+        Painel de Admin
+      </h1>
+      <div class="flex gap-3">
+        <a
+          href="{{ route('site.admin') }}"
+          class="bg-[#3598CA] hover:bg-[#2F8BB9] text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition-transform hover:scale-105"
+        >
+          <i class='bx bx-user'></i>
+          Usuários
+        </a>
+
+        <a
+          href="{{ route('admin.escrita.index') }}"
+          class="bg-[#3598CA] hover:bg-[#2F8BB9] text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition-transform hover:scale-105"
+        >
+          <i class='bx bx-edit'></i>
+          Lições de escrita
+        </a>
+      </div>
     </header>
 
     @session('success')
