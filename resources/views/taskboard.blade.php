@@ -11,59 +11,54 @@
 
         <div>
           <h2 class="font-bold mb-2">Escrita</h2>
-          <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3">
+          <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3 overflow-x-auto">
 
-            <a href="{{ route('site.escrita') }}"
-               class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
-              <span>Cap. 1</span>
-              <span class="font-normal leading-tight">Atual:</span>
-              <span>Aula 3</span>
+            <div class="flex items-center gap-3">
+              @foreach($writingLessons as $lesson)
+                <a href="{{ route('writing.lesson', $lesson->numero) }}"
+                   class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
+                  <span class="text-xs uppercase tracking-wider font-semibold opacity-75">Lição</span>
+                  <span class="text-xl font-black">{{ $lesson->numero }}</span>
+                </a>
+              @endforeach
+
+              @if($writingLessons->isEmpty())
+                <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
+                  <i class='bx bxs-lock-alt text-3xl'></i>
+                </div>
+              @endif
+            </div>
+
+            <a href="{{ route('site.escrita') }}" class="text-white hover:text-cyan-400 transition-colors pr-1 shrink-0">
+              <i class='bx bx-chevron-right text-3xl'></i>
             </a>
 
-            <!-- Ícone de Cadeado Boxicons -->
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <button class="text-white hover:text-cyan-400 transition-colors pr-1">
-              <i class='bx bx-chevron-right text-3xl'></i>
-            </button>
           </div>
         </div>
 
         <div>
           <h2 class="font-bold mb-2">Audição</h2>
-          <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3">
+          <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3 overflow-x-auto">
 
-            <button class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
-              <span>Cap. 1</span>
-              <span class="font-normal leading-tight">Atual:</span>
-              <span>Aula 1</span>
-            </button>
+            <div class="flex items-center gap-3">
+              @foreach($listeningLessons as $lesson)
+                <a href="{{ route('site.escuta', $lesson->numero) }}"
+                   class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
+                  <span class="text-xs uppercase tracking-wider font-semibold opacity-75">Lição</span>
+                  <span class="text-xl font-black">{{ $lesson->numero }}</span>
+                </a>
+              @endforeach
 
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
-              <i class='bx bxs-lock-alt text-3xl'></i>
+              @if($listeningLessons->isEmpty())
+                <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
+                  <i class='bx bxs-lock-alt text-3xl'></i>
+                </div>
+              @endif
             </div>
 
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">
-              <i class='bx bxs-lock-alt text-3xl'></i>
-            </div>
-
-            <button class="text-white hover:text-cyan-400 transition-colors pr-1">
+            <a href="{{ route('site.escuta') }}" class="text-white hover:text-cyan-400 transition-colors pr-1 shrink-0">
               <i class='bx bx-chevron-right text-3xl'></i>
-            </button>
+            </a>
 
           </div>
         </div>
@@ -73,9 +68,9 @@
           <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3">
 
             <button class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
-              <span>Cap. 1</span>
+              <span>N/A</span>
               <span class="font-normal leading-tight">Atual:</span>
-              <span>Aula 2</span>
+              <span>N/A</span>
             </button>
 
             <div class="w-20 h-20 bg-[#03111d] rounded-2xl flex items-center justify-center text-gray-600 shadow-inner shrink-0">

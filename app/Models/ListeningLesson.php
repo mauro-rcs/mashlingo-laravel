@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WritingLesson extends Model
+class ListeningLesson extends Model
 {
     protected $fillable = [
         'numero',
@@ -15,11 +15,7 @@ class WritingLesson extends Model
 
     public function questions()
     {
-        return $this->hasMany(WritingQuestion::class);
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'numero';
+        return $this->hasMany(ListeningQuestion::class)
+            ->orderBy('ordem');
     }
 }

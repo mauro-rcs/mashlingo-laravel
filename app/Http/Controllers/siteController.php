@@ -30,8 +30,10 @@ class siteController extends Controller
     public function taskboard()
     {
         $user = auth()->user();
+        $listeningLessons = \App\Models\ListeningLesson::orderBy('numero')->get();
+        $writingLessons = \App\Models\WritingLesson::orderBy('numero')->get();
 
-        return view('taskboard', compact('user'));
+        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons'));
     }
 
     public function admin()

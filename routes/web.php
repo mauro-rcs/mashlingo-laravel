@@ -4,6 +4,7 @@ use App\Http\Controllers\siteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WritingController;
 use App\Http\Controllers\WritingLessonController;
+use App\Http\Controllers\ListeningLessonController;
 use Illuminate\Support\Facades\Route;
 
 // SITE
@@ -51,6 +52,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/escrita/licao/{lesson}/complete', [siteController::class, 'submitWritingLesson'])
         ->name('writing.complete');
 
+    // ESCUTA
+    Route::get('/escuta/{lesson?}', [App\Http\Controllers\ListeningLessonController::class, 'showLesson'])->name('site.escuta');
+
+    Route::get('/escuta', [ListeningLessonController::class, 'showLesson'])->name('site.escuta');
+
     // LOGOUT
     Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])
         ->name('auth.logout');
@@ -65,7 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])
         ->name('user.edit');
 
-    // ADMIN — ESCRITA
+    // ADMIN - ESCRITA
     Route::get('/admin/escrita', [WritingLessonController::class, 'index'])
         ->name('admin.escrita.index');
 
@@ -77,4 +83,17 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/admin/escrita/{lesson}', [WritingLessonController::class, 'destroy'])
         ->name('admin.escrita.destroy');
+
+    // ADMIN - LISTENING
+    Route::get('/admin/escuta', [ListeningLessonController::class, 'index'])
+        ->name('admin.escuta.index');
+
+    Route::post('/admin/escuta', [ListeningLessonController::class, 'store'])
+        ->name('admin.escuta.store');
+
+    Route::put('/admin/escuta/{lesson}', [ListeningLessonController::class, 'update'])
+        ->name('admin.escuta.update');
+
+    Route::delete('/admin/escuta/{lesson}', [ListeningLessonController::class, 'destroy'])
+        ->name('admin.escuta.destroy');
 });

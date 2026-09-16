@@ -20,6 +20,14 @@
           <i class='bx bx-edit'></i>
           Lições de escrita
         </a>
+
+        <a
+          href="{{ route('admin.escuta.index') }}"
+          class="bg-[#3598CA] hover:bg-[#2F8BB9] text-white font-bold px-5 py-2.5 rounded-xl shadow-md"
+        >
+          <i class='bx bx-headphone'></i>
+          Lições de escuta
+        </a>
       </div>
     </header>
 
@@ -82,7 +90,7 @@
                   @method('DELETE')
                   <button type="submit"
                           onclick="return confirm('Tem certeza que deseja excluir este usuário?')"
-                          class="inline-flex items-center gap-1.5 bg-[#03111d] hover:bg-red-600/80 text-red-300 hover:text-white font-extrabold px-4 py-2 rounded-xl border border-red-500/30 shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer">
+                          class="inline-flex items-center gap-1.5 bg-[#03111d] hover:bg-[#2F8BB9] font-extrabold px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer">
                     <i class='bx bx-trash text-lg'></i>
                     Excluir
                   </button>
