@@ -1,6 +1,3 @@
-<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
 <x-layout>
   <div class="max-w-5xl mx-auto w-full space-y-8 my-8 px-4 box-border">
     <header class="bg-[#051d31] p-6 md:p-8 rounded-[2.5rem] shadow-2xl text-center space-y-2">
@@ -12,6 +9,15 @@
       </p>
     </header>
 
+    <form method="GET" action="{{ route('admin.escrita.index') }}" class="space-y-1">
+      <label for="categoria" class="block font-bold text-gray-200">Temática / Categoria:</label>
+      <select name="categoria" id="categoria" onchange="this.form.submit()" class="w-full bg-[#03111d]/90 text-white font-semibold px-5 py-3 rounded-2xl border border-white/5 focus:outline-none focus:border-cyan-400 shadow-inner">
+        <option value="entretenimento" {{ (isset($categoria) && $categoria == 'entretenimento') ? 'selected' : '' }}>Entretenimento</option>
+        <option value="viagens" {{ (isset($categoria) && $categoria == 'viagens') ? 'selected' : '' }}>Viagens</option>
+        <option value="negocios" {{ (isset($categoria) && $categoria == 'negocios') ? 'selected' : '' }}>Negócios</option>
+      </select>
+    </form>
+
     @if(session('success'))
       <div class="w-full text-center font-bold bg-[#3598CA] text-white px-6 py-3 rounded-2xl shadow-lg">
         {{ session('success') }}
@@ -19,7 +25,7 @@
     @endif
 
     @if($errors->any())
-      <div class="w-full text-center font-bold bg-[#3598CA] text-white px-6 py-3 rounded-2xl shadow-lg"">
+      <div class="w-full text-center font-bold bg-[#3598CA] text-white px-6 py-3 rounded-2xl shadow-lg">
         <p class="font-bold pb-1">Atenção! Verifique os campos:</p>
         <ul class="list-disc list-inside text-sm font-semibold space-y-1 pt-1">
           @foreach($errors->all() as $error)
@@ -38,6 +44,8 @@
 
       <form action="{{ route('admin.escrita.store') }}" method="POST" class="space-y-6">
         @csrf
+        <input type="hidden" name="categoria" value="{{ $categoria ?? 'entretenimento' }}">
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-2">Número da Aula</label>
@@ -95,99 +103,29 @@
       </form>
     </section>
 
-    <section class="space-y-4 w-full">
-      <h2 class="text-xl font-black text-white px-2">Lições Cadastradas</h2>
+    <section class="space-y-4 w-full bg-[#051d31] p-6 md:p-8 rounded-[2.5rem] shadow-2xl">
+      <div class="flex justify-between items-center px-2">
+        <h2 class="text-xl font-black text-white">Lições Cadastradas ({{ ucfirst($categoria ?? 'entretenimento') }})</h2>
+      </div>
 
-      @forelse($lessons as $lesson)
-        <div x-data="{ open: false }" class="bg-[#051d31] rounded-[2rem] shadow-2xl transition-all overflow-hidden w-full">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-2">
+        @forelse($lessons as $lesson)
+          <a href="{{ route('admin.escrita.edit', $lesson) }}"
+             class="bg-white text-[#082A45] p-4 rounded-2xl flex flex-col items-center justify-center text-center border-4 border-cyan-400 shadow-lg hover:scale-105 transition-transform min-h-[110px] group relative">
 
-          <div @click="open = !open" class="p-6 cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[#082842] transition-colors select-none">
-            <div class="flex items-center gap-4 min-w-0">
-              <span class="bg-[#03111d] px-3.5 py-1.5 rounded-full font-extrabold text-cyan-400 text-xs uppercase tracking-wider shrink-0">
-                Aula {{ $lesson->numero }}
-              </span>
-              <div class="min-w-0">
-                <h3 class="text-lg font-black text-white truncate">{{ $lesson->titulo }}</h3>
-                <p class="text-xs text-gray-400 font-medium truncate">{{ $lesson->instrucao }}</p>
-              </div>
-            </div>
+            <span class="font-black text-base">Aula {{ $lesson->numero }}</span>
+            <span class="text-xs font-bold text-gray-600 truncate max-w-full px-1 mt-1">{{ $lesson->titulo }}</span>
 
-            <div class="flex items-center gap-3 self-end md:self-auto shrink-0" @click.stop>
-              <span class="text-cyan-500 px-3 py-1 rounded-xl font-black text-xs">
-                {{ $lesson->xp }} XP
-              </span>
-
-              <form action="{{ route('admin.escrita.destroy', $lesson) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta lição?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-[#03111d] text-cyan-500 hover:text-white p-2 rounded-xl transition-all cursor-pointer text-sm font-bold flex items-center gap-1">
-                  <i class='bx bx-trash text-base'></i>
-                </button>
-              </form>
-
-              <button type="button" @click="open = !open" class="text-gray-400 hover:text-white transition-transform duration-200" :class="{ 'rotate-180': open }">
-                <i class='bx bx-chevron-down text-2xl'></i>
-              </button>
-            </div>
+            <span class="absolute top-2 right-2 bg-[#082A45] text-cyan-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+              {{ $lesson->xp }}xp
+            </span>
+          </a>
+        @empty
+          <div class="col-span-full py-8 text-center text-gray-400 font-medium">
+            Nenhuma lição cadastrada nesta categoria.
           </div>
-
-          <div x-show="open" x-collapse x-cloak class="p-6 pt-0 space-y-6 mt-2 w-full">
-            <form action="{{ route('admin.escrita.update', $lesson) }}" method="POST" class="space-y-6 pt-2 w-full">
-              @csrf
-              @method('PUT')
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Número</label>
-                  <input type="number" name="numero" value="{{ $lesson->numero }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Título</label>
-                  <input type="text" name="titulo" value="{{ $lesson->titulo }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">XP</label>
-                  <input type="number" name="xp" value="{{ $lesson->xp }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Instrução</label>
-                <textarea name="instrucao" rows="2" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400 resize-none">{{ $lesson->instrucao }}</textarea>
-              </div>
-
-              <div class="space-y-3 pt-2">
-                <h4 class="text-sm font-bold text-gray-300">Questões da Aula</h4>
-
-                <div class="space-y-3">
-                  @foreach($lesson->questions as $question)
-                    <div class="bg-[#03111d] p-4 rounded-2xl space-y-2">
-                      <span class="text-xs font-bold text-cyan-400">Questão {{ $question->ordem }}</span>
-
-                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <input type="text" name="questions[{{ $loop->index }}][frase_portugues]" value="{{ $question->frase_portugues }}" class="w-full bg-[#051d31] text-white text-sm font-semibold p-2.5 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
-
-                        <input type="text" name="questions[{{ $loop->index }}][resposta_correta]" value="{{ $question->resposta_correta }}" class="w-full bg-[#051d31] text-white text-sm font-semibold p-2.5 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
-                      </div>
-                    </div>
-                  @endforeach
-                </div>
-              </div>
-
-              <div class="flex justify-end pt-2">
-                <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-lg transition-all cursor-pointer text-sm flex items-center gap-2">
-                  <i class='bx bx-save text-lg'></i> Salvar Alterações
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      @empty
-        <div class="bg-[#051d31] p-8 rounded-[2.5rem] text-center text-gray-400">
-          Nenhuma lição cadastrada até o momento.
-        </div>
-      @endforelse
+        @endforelse
+      </div>
     </section>
   </div>
 </x-layout>

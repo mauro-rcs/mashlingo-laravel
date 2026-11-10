@@ -11,6 +11,7 @@ class WritingLesson extends Model
         'titulo',
         'instrucao',
         'xp',
+        'categoria'
     ];
 
     public function questions()

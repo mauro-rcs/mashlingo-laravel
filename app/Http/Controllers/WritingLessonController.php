@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 
 class WritingLessonController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $lessons = WritingLesson::with('questions')
-            ->orderBy('numero')
-            ->get();
+        $categoria = $request->get('categoria', 'entretenimento');
 
-        return view('admin.escrita.index', compact('lessons'));
+        $lessons = WritingLesson::where('categoria', $categoria)->orderBy('numero')->get();
+
+        return view('admin.escrita.index', compact('lessons', 'categoria'));
     }
 
     public function store(Request $request)

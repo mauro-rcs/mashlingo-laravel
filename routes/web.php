@@ -1,17 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\PlacementQuestionController;
 use App\Http\Controllers\siteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WritingController;
 use App\Http\Controllers\WritingLessonController;
 use App\Http\Controllers\ListeningLessonController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PlacementController;
 
-// SITE
 // SITE
 Route::get('/', [siteController::class, 'index'])
     ->name('site.index');
-
 
 // LOGIN E CADASTRO — somente visitantes
 Route::middleware('guest')->group(function () {
@@ -41,6 +41,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin', [siteController::class, 'admin'])
         ->name('site.admin');
+
+    Route::get('/placement/index', [PlacementController::class, 'show'])
+        ->name('placement.index');
+
+    Route::post('/placement/submit', [PlacementController::class, 'submitTest'])
+        ->name('placement.submit');
 
     // ESCRITA
     Route::get('/escrita', [siteController::class, 'escrita'])
@@ -84,6 +90,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/escrita/{lesson}', [WritingLessonController::class, 'destroy'])
         ->name('admin.escrita.destroy');
 
+    Route::get('/admin/escrita/{lesson}/edit', [siteController::class, 'escritaEdit'])->name('admin.escrita.edit');
+    Route::put('/admin/escrita/{lesson}', [siteController::class, 'escritaUpdate'])->name('admin.escrita.update');
+
     // ADMIN - LISTENING
     Route::get('/admin/escuta', [ListeningLessonController::class, 'index'])
         ->name('admin.escuta.index');
@@ -96,4 +105,13 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/admin/escuta/{lesson}', [ListeningLessonController::class, 'destroy'])
         ->name('admin.escuta.destroy');
+
+    Route::get('/admin/placement', [PlacementQuestionController::class, 'index'])
+        ->name('admin.placement.index');
+
+    Route::post('/admin/placement', [PlacementQuestionController::class, 'store'])
+        ->name('admin.placement.store');
+
+    Route::delete('/admin/placement/{question}', [PlacementQuestionController::class, 'destroy'])
+        ->name('admin.placement.destroy');
 });

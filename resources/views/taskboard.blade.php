@@ -9,6 +9,20 @@
 
       <div class="lg:col-span-7 space-y-6">
 
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-2xl md:text-3xl font-black tracking-wide">Minhas Aulas – Inglês</h1>
+
+          <!-- Seletor de Categoria -->
+          <form method="GET" action="{{ route('site.taskboard') }}" class="flex items-center gap-2">
+            <label for="categoria" class="font-bold text-gray-300">Temática:</label>
+            <select name="categoria" id="categoria" onchange="this.form.submit()" class="bg-[#051d31] text-cyan-400 font-extrabold px-4 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-cyan-400">
+              <option value="entretenimento" {{ request('categoria') == 'entretenimento' ? 'selected' : '' }}>Entretenimento</option>
+              <option value="viagens" {{ request('categoria') == 'viagens' ? 'selected' : '' }}>Viagens</option>
+              <option value="negocios" {{ request('categoria') == 'negocios' ? 'selected' : '' }}>Negócios</option>
+            </select>
+          </form>
+        </div>
+
         <div>
           <h2 class="font-bold mb-2">Escrita</h2>
           <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3 overflow-x-auto">

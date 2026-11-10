@@ -12,6 +12,15 @@
       </p>
     </header>
 
+    <div class="space-y-1">
+      <label for="categoria" class="block font-bold text-gray-200">Temática / Categoria:</label>
+      <select name="categoria" id="categoria" class="w-full bg-[#03111d]/90 text-white font-semibold px-5 py-3 rounded-2xl border border-white/5 focus:outline-none focus:border-cyan-400 shadow-inner">
+        <option value="entretenimento" {{ (isset($lesson) && $lesson->categoria == 'entretenimento') ? 'selected' : '' }}>Entretenimento</option>
+        <option value="viagens" {{ (isset($lesson) && $lesson->categoria == 'viagens') ? 'selected' : '' }}>Viagens</option>
+        <option value="negocios" {{ (isset($lesson) && $lesson->categoria == 'negocios') ? 'selected' : '' }}>Negócios</option>
+      </select>
+    </div>
+
     @if(session('success'))
       <div class="w-full text-center font-bold bg-[#3598CA] text-white px-6 py-3 rounded-2xl shadow-lg">
         {{ session('success') }}

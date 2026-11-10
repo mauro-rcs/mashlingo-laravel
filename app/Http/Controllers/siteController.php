@@ -27,13 +27,53 @@ class siteController extends Controller
         return view('perfil', compact('user'));
     }
 
-    public function taskboard()
+    public function taskboard(Request $request)
     {
         $user = auth()->user();
-        $listeningLessons = \App\Models\ListeningLesson::orderBy('numero')->get();
-        $writingLessons = \App\Models\WritingLesson::orderBy('numero')->get();
 
-        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons'));
+        $categoria = $request->get('categoria', 'entretenimento');
+
+        $listeningLessons = \App\Models\ListeningLesson::where('categoria', $categoria)->orderBy('numero')->get();
+        $writingLessons = \App\Models\WritingLesson::where('categoria', $categoria)->orderBy('numero')->get();
+
+        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons', 'categoria'));
+    }
+
+    public function escrita(Request $request)
+    {
+        $categoria = $request->get('categoria', 'entretenimento');
+
+        $lessons = WritingLesson::where('categoria', $categoria)->orderBy('numero')->get();
+
+        return view('admin.escrita.index', compact('lessons', 'categoria'));
+    }
+
+    public function escritaEdit(WritingLesson $lesson)
+    {
+        return view('admin.escrita.edit', compact('lesson'));
+    }
+
+    public function escritaUpdate(Request $request, WritingLesson $lesson)
+    {
+        $request->validate([
+            'numero' => 'required|integer',
+            'titulo' => 'required|string|max:255',
+            'instrucao' => 'required|string',
+            'xp' => 'required|integer',
+        ]);
+
+        $lesson->update($request->only(['numero', 'titulo', 'instrucao', 'xp']));
+
+        // Atualizar as questões se vierem no request
+        if ($request->has('questions')) {
+            foreach ($request->input('questions') as $index => $qData) {
+                if (isset($lesson->questions[$index])) {
+                    $lesson->questions[$index]->update($qData);
+                }
+            }
+        }
+
+        return back()->with('success', 'Lição atualizada com sucesso!');
     }
 
     public function admin()
@@ -45,13 +85,6 @@ class siteController extends Controller
         $users = \App\Models\User::all();
 
         return view('admin', compact('users'));
-    }
-
-    public function escrita()
-    {
-        $lessons = WritingLesson::orderBy('numero')->get();
-
-        return view('escrita', compact('lessons'));
     }
 
     public function completeLesson($lesson)
