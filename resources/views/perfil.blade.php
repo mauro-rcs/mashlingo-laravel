@@ -8,10 +8,17 @@
     @endsession
 
     <div class="w-full bg-[#051d31] p-8 md:p-10 rounded-[2.5rem] shadow-2xl border border-white/5 relative">
-      <header class="mb-8 border-b border-white/10 pb-4 flex justify-between items-center">
+      <header class="mb-8 border-b border-white/10 pb-4 flex flex-col md:flex-row justify-between items-center gap-4">
         <h1 class="text-2xl font-black tracking-wide">Meu Perfil</h1>
-        <div class="bg-[#03111d] px-4 py-1.5 rounded-full font-bold text-cyan-400 border border-white/5">
-          XP: <span class="text-white">{{ $user->xp ?? 0 }} pts</span>
+
+        <div class="flex items-center gap-3">
+          <div class="bg-[#03111d] px-4 py-1.5 rounded-full font-bold border border-white/5 flex items-center gap-2">
+            Nível: <span class="text-white px-2.5 py-0.5 rounded-full text-xs font-black uppercase">{{ $user->nivel ?? 'A1' }}</span>
+          </div>
+
+          <div class="bg-[#03111d] px-4 py-1.5 rounded-full font-bold border border-white/5">
+            XP: <span class="text-white">{{ $user->xp ?? 0 }} pts</span>
+          </div>
         </div>
       </header>
 
@@ -90,7 +97,7 @@
             </div>
 
             <div class="space-y-3 pt-2">
-              <h3 class="font-extrabold uppercase tracking-wider text-gray-400">Notificações</h3>
+              <h3 class="font-extrabold uppercase tracking-wider text-gray-400">Notificações (prévia)</h3>
               <div class="space-y-2 font-bold text-gray-200">
                 <label class="flex items-center justify-between cursor-pointer">
                   <span>Todas</span>

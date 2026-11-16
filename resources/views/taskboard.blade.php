@@ -12,7 +12,6 @@
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl md:text-3xl font-black tracking-wide">Minhas Aulas – Inglês</h1>
 
-          <!-- Seletor de Categoria -->
           <form method="GET" action="{{ route('site.taskboard') }}" class="flex items-center gap-2">
             <label for="categoria" class="font-bold text-gray-300">Temática:</label>
             <select name="categoria" id="categoria" onchange="this.form.submit()" class="bg-[#051d31] text-cyan-400 font-extrabold px-4 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-cyan-400">
@@ -28,11 +27,27 @@
           <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3 overflow-x-auto">
 
             <div class="flex items-center gap-3">
+              @php
+                // Mapeamento das bordas do botão baseadas na paleta (do mais claro ao mais escuro)
+                $niveisBordas = [
+                    'A1' => 'border-[#a9d6e5]',
+                    'A2' => 'border-[#61a5c2]',
+                    'B1' => 'border-[#3598CA]',
+                    'B2' => 'border-[#2c6298]',
+                    'C1' => 'border-[#134074]',
+                    'C2' => 'border-[#0b2545]',
+                ];
+              @endphp
+
               @foreach($writingLessons as $lesson)
+                @php
+                  $nivelBorda = $niveisBordas[$lesson->nivel ?? 'A1'] ?? 'border-[#3598CA]';
+                @endphp
                 <a href="{{ route('writing.lesson', $lesson->numero) }}"
-                   class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
-                  <span class="text-xs uppercase tracking-wider font-semibold opacity-75">Lição</span>
-                  <span class="text-xl font-black">{{ $lesson->numero }}</span>
+                   class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 {{ $nivelBorda }} shadow-lg shrink-0 hover:scale-105 transition-transform p-1">
+                  <span class="text-[9px] uppercase tracking-wider font-semibold opacity-75 leading-none">Lição</span>
+                  <span class="text-lg font-black leading-tight my-0.5">{{ $lesson->numero }}</span>
+                  <span class="text-xs font-bold text-gray-600 leading-none">{{ $lesson->nivel ?? 'A1' }}</span>
                 </a>
               @endforeach
 

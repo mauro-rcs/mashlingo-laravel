@@ -23,6 +23,8 @@ class WritingLessonController extends Controller
             'titulo' => ['required', 'string', 'max:255'],
             'instrucao' => ['required', 'string'],
             'xp' => ['required', 'integer', 'min:0'],
+            'categoria' => ['required', 'string'],
+            'nivel' => ['required', 'string', 'in:A1,A2,B1,B2,C1,C2'],
 
             'questions' => ['required', 'array', 'min:1'],
             'questions.*.frase_portugues' => ['required', 'string'],
@@ -34,6 +36,8 @@ class WritingLessonController extends Controller
             'titulo' => $request->titulo,
             'instrucao' => $request->instrucao,
             'xp' => $request->xp,
+            'categoria' => $request->categoria,
+            'nivel' => $request->nivel,
         ]);
 
         foreach ($request->questions as $ordem => $question) {
@@ -46,7 +50,7 @@ class WritingLessonController extends Controller
 
         return redirect()
             ->route('admin.escrita.index')
-            ->with('success', 'Lição criada com sucesso!');
+            ->with('success', 'Lição criada com sucesso');
     }
 
     public function update(Request $request, WritingLesson $lesson)
@@ -60,6 +64,8 @@ class WritingLessonController extends Controller
             'titulo' => ['required', 'string', 'max:255'],
             'instrucao' => ['required', 'string'],
             'xp' => ['required', 'integer', 'min:0'],
+            'categoria' => ['required', 'string'],                         // <-- Adicionado na validação
+            'nivel' => ['required', 'string', 'in:A1,A2,B1,B2,C1,C2'],     // <-- Adicionado na validação
 
             'questions' => ['required', 'array', 'min:1'],
             'questions.*.frase_portugues' => ['required', 'string'],
@@ -71,6 +77,8 @@ class WritingLessonController extends Controller
             'titulo' => $request->titulo,
             'instrucao' => $request->instrucao,
             'xp' => $request->xp,
+            'categoria' => $request->categoria,
+            'nivel' => $request->nivel,
         ]);
 
         $lesson->questions()->delete();

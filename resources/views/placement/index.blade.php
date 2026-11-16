@@ -5,16 +5,21 @@
 
     <header class="bg-[#051d31] p-6 rounded-[2rem] shadow-2xl flex items-center justify-between">
       <div>
-        <span class="text-xs font-black text-cyan-400 uppercase tracking-widest">Avaliação Inicial</span>
         <h1 class="text-2xl font-black text-white">Teste de Nivelamento</h1>
-        <p class="text-xs text-gray-300 font-semibold mt-1">Responda com atenção para definirmos seu nível (A1 a C2).</p>
+        <p class="text-gray-300 font-semibold mt-1">Responda com atenção para definirmos seu nível (A1 a C2).</p>
       </div>
       <div class="bg-cyan-500/20 text-cyan-400 font-black px-4 py-2 rounded-2xl text-xs uppercase tracking-wider">
         Nível <span x-text="currentQuestion.nivel"></span>
       </div>
     </header>
 
-    <form action="{{ route('placement.submit') }}" method="POST">
+    @if(session('error'))
+      <div class="bg-red-500/20 text-red-300 font-bold px-4 py-3 rounded-2xl text-sm">
+        {{ session('error') }}
+      </div>
+    @endif
+
+    <form x-ref="form" action="{{ route('placement.submit') }}" method="POST">
       @csrf
 
       <template x-for="(ans, qId) in answers" :key="qId">
@@ -26,14 +31,15 @@
         <div class="flex items-center justify-between text-xs font-extrabold text-gray-400">
           <span>Questão <span x-text="currentIndex + 1"></span> de <span x-text="questions.length"></span></span>
           <div class="w-1/3 bg-[#03111d] h-2 rounded-full overflow-hidden">
-            <div class="bg-cyan-400 h-full transition-all duration-300" :style="'width: ' + (((currentIndex + 1) / questions.length) * 100) + '%'"></div>
+            <div class="bg-cyan-400 h-full transition-all duration-300"
+                 :style="'width: ' + (((currentIndex + 1) / questions.length) * 100) + '%'"></div>
           </div>
         </div>
 
         <div class="text-center space-y-4 py-4">
-                    <span class="inline-block bg-[#03111d] text-cyan-400 text-xs font-bold px-3 py-1 rounded-full">
-                        Traduza a frase:
-                    </span>
+          <span class="inline-block bg-[#03111d] text-cyan-400 text-xs font-bold px-3 py-1 rounded-full"
+                x-text="currentQuestion.audio ? 'Ouça e escreva o que você ouviu:' : 'Traduza a frase:'"></span>
+
           <h2 class="text-xl font-black text-white" x-text="currentQuestion.frase_portugues"></h2>
 
           <template x-if="currentQuestion.audio">
@@ -46,20 +52,35 @@
         <div class="space-y-2">
           <input type="text"
                  x-model="userAnswer"
-                 @keydown.enter.prevent="nextQuestion()"
+                 :disabled="submitting"
+                 @keydown.enter.prevent="isLast ? finish() : nextQuestion()"
                  placeholder="Resposta em inglês"
+                 autocomplete="off"
                  class="w-full bg-[#03111d] text-white text-sm font-semibold p-4 rounded-2xl border-0 outline-none focus:ring-2 focus:ring-cyan-400 shadow-inner">
         </div>
 
         <div class="pt-4 flex justify-end">
-          <button type="button"
-                  @click="nextQuestion()"
-                  :disabled="!userAnswer.trim()"
-                  :class="{'opacity-50 cursor-not-allowed': !userAnswer.trim(), 'cursor-pointer hover:bg-[#2F8BB9]': userAnswer.trim()}"
-                  class="bg-[#3598CA] text-white font-black px-6 py-3.5 rounded-2xl shadow-xl transition-all flex items-center gap-2">
-            <span x-text="currentIndex < questions.length - 1 ? 'Próxima Questão' : 'Finalizar Teste'"></span>
-            <i class='bx bx-right-arrow-alt text-xl'></i>
-          </button>
+          <template x-if="!isLast">
+            <button type="button"
+                    @click="nextQuestion()"
+                    :disabled="!userAnswer.trim()"
+                    :class="{'opacity-50 cursor-not-allowed': !userAnswer.trim(), 'cursor-pointer hover:bg-[#2F8BB9]': userAnswer.trim()}"
+                    class="bg-[#3598CA] text-white font-black px-6 py-3.5 rounded-2xl shadow-xl transition-all flex items-center gap-2">
+              <span>Próxima Questão</span>
+              <i class='bx bx-right-arrow-alt text-xl'></i>
+            </button>
+          </template>
+
+          <template x-if="isLast">
+            <button type="button"
+                    @click="finish()"
+                    :disabled="!userAnswer.trim() || submitting"
+                    :class="{'opacity-50 cursor-not-allowed': !userAnswer.trim() || submitting, 'cursor-pointer hover:bg-green-500': userAnswer.trim() && !submitting}"
+                    class="bg-green-600 text-white font-black px-8 py-3.5 rounded-2xl shadow-xl transition-all flex items-center gap-2">
+              <span x-text="submitting ? 'Avaliando com IA...' : 'Finalizar Teste'"></span>
+              <i class='bx bx-check-double text-xl'></i>
+            </button>
+          </template>
         </div>
       </div>
     </form>
@@ -72,24 +93,35 @@
         currentIndex: 0,
         userAnswer: '',
         answers: {},
+        submitting: false,
 
         get currentQuestion() {
-          return this.questions[this.currentIndex];
+          return this.questions[this.currentIndex] || {};
+        },
+
+        get isLast() {
+          return this.currentIndex === this.questions.length - 1;
         },
 
         nextQuestion() {
           if (!this.userAnswer.trim()) return;
 
-          // Salva a resposta atual vinculada ao ID da questão
           this.answers[this.currentQuestion.id] = this.userAnswer.trim();
-          this.userAnswer = ''; // Limpa o input para a próxima
+          this.userAnswer = '';
 
-          if (this.currentIndex < this.questions.length - 1) {
+          if (!this.isLast) {
             this.currentIndex++;
-          } else {
-            // Se chegou ao fim, submete o formulário programaticamente
-            this.$el.querySelector('form').submit();
           }
+        },
+
+        finish() {
+          if (!this.userAnswer.trim() || this.submitting) return;
+
+          this.answers[this.currentQuestion.id] = this.userAnswer.trim();
+          this.submitting = true;
+
+          // espera o Alpine criar os inputs hidden antes de enviar
+          this.$nextTick(() => this.$refs.form.submit());
         }
       }));
     });

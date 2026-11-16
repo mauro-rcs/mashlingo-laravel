@@ -20,26 +20,46 @@
         @csrf
         @method('PUT')
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Número</label>
-            <input type="number" name="numero" value="{{ $lesson->numero }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
+            <input type="number" name="numero" value="{{ old('numero', $lesson->numero) }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
           </div>
 
           <div>
             <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Título</label>
-            <input type="text" name="titulo" value="{{ $lesson->titulo }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
+            <input type="text" name="titulo" value="{{ old('titulo', $lesson->titulo) }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
           </div>
 
           <div>
             <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">XP</label>
-            <input type="number" name="xp" value="{{ $lesson->xp }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
+            <input type="number" name="xp" value="{{ old('xp', $lesson->xp) }}" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400">
+          </div>
+
+          <div>
+            <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Categoria</label>
+            <select name="categoria" class="w-full bg-[#03111d] text-white p-3.5 rounded-xl outline-none focus:ring-2 focus:ring-cyan-400 font-semibold">
+              <option value="entretenimento" {{ old('categoria', $lesson->categoria) == 'entretenimento' ? 'selected' : '' }}>Entretenimento</option>
+              <option value="viagens" {{ old('categoria', $lesson->categoria) == 'viagens' ? 'selected' : '' }}>Viagens</option>
+              <option value="negocios" {{ old('categoria', $lesson->categoria) == 'negocios' ? 'selected' : '' }}>Negócios</option>
+            </select>
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-extrabold text-gray-400 uppercase tracking-wider mb-1">Instrução</label>
-          <textarea name="instrucao" rows="2" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400 resize-none">{{ $lesson->instrucao }}</textarea>
+          <textarea name="instrucao" rows="2" class="w-full bg-[#03111d] text-white font-semibold p-3 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400 resize-none">{{ old('instrucao', $lesson->instrucao) }}</textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-300 uppercase mb-2">Nível da Lição</label>
+          <select name="nivel" class="w-full bg-[#03111d] text-white p-3.5 rounded-2xl focus:ring-2 focus:ring-cyan-400 outline-none font-semibold">
+            @foreach(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as $niv)
+              <option value="{{ $niv }}" {{ old('nivel', $lesson->nivel) == $niv ? 'selected' : '' }}>
+                Nível {{ $niv }}
+              </option>
+            @endforeach
+          </select>
         </div>
 
         <div class="space-y-3 pt-2">

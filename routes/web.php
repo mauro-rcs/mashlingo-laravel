@@ -84,14 +84,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/escrita', [WritingLessonController::class, 'store'])
         ->name('admin.escrita.store');
 
+    Route::get('/admin/escrita/{lesson}/edit', [siteController::class, 'escritaEdit'])
+        ->name('admin.escrita.edit');
+
     Route::put('/admin/escrita/{lesson}', [WritingLessonController::class, 'update'])
         ->name('admin.escrita.update');
 
     Route::delete('/admin/escrita/{lesson}', [WritingLessonController::class, 'destroy'])
         ->name('admin.escrita.destroy');
 
-    Route::get('/admin/escrita/{lesson}/edit', [siteController::class, 'escritaEdit'])->name('admin.escrita.edit');
-    Route::put('/admin/escrita/{lesson}', [siteController::class, 'escritaUpdate'])->name('admin.escrita.update');
 
     // ADMIN - LISTENING
     Route::get('/admin/escuta', [ListeningLessonController::class, 'index'])
@@ -114,4 +115,7 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/admin/placement/{question}', [PlacementQuestionController::class, 'destroy'])
         ->name('admin.placement.destroy');
+
+    Route::get('/placement/resultado', [PlacementController::class, 'resultado'])
+        ->name('placement.resultado');
 });

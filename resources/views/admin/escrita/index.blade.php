@@ -68,6 +68,17 @@
           <textarea name="instrucao" rows="2" required class="w-full bg-[#03111d] text-white font-semibold p-3.5 rounded-xl border-0 outline-none focus:ring-2 focus:ring-cyan-400 resize-none transition-colors"></textarea>
         </div>
 
+        <div>
+          <label class="block text-xs font-bold text-gray-300 uppercase mb-2">Nível da Lição</label>
+          <select name="nivel" class="w-full bg-[#03111d] text-white p-3.5 rounded-2xl focus:ring-2 focus:ring-cyan-400 outline-none">
+            @foreach(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as $niv)
+              <option value="{{ $niv }}" {{ old('nivel', $lesson->nivel ?? '') == $niv ? 'selected' : '' }}>
+                Nível {{ $niv }}
+              </option>
+            @endforeach
+          </select>
+        </div>
+
         <div class="space-y-4 pt-4">
           <h3 class="text-base font-bold text-white flex items-center gap-2">
             <i class='bx bx-list-ol text-cyan-400'></i> Cadastrar Questões Iniciais
