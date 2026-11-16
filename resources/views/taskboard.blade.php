@@ -70,11 +70,26 @@
           <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3 overflow-x-auto">
 
             <div class="flex items-center gap-3">
+              @php
+                $niveisBordas = [
+                    'A1' => 'border-[#a9d6e5]',
+                    'A2' => 'border-[#61a5c2]',
+                    'B1' => 'border-[#3598CA]',
+                    'B2' => 'border-[#2c6298]',
+                    'C1' => 'border-[#134074]',
+                    'C2' => 'border-[#0b2545]',
+                ];
+              @endphp
+
               @foreach($listeningLessons as $lesson)
+                @php
+                  $nivelBorda = $niveisBordas[$lesson->nivel ?? 'A1'] ?? 'border-[#3598CA]';
+                @endphp
                 <a href="{{ route('site.escuta', $lesson->numero) }}"
-                   class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
-                  <span class="text-xs uppercase tracking-wider font-semibold opacity-75">Lição</span>
-                  <span class="text-xl font-black">{{ $lesson->numero }}</span>
+                   class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 {{ $nivelBorda }} shadow-lg shrink-0 hover:scale-105 transition-transform p-1">
+                  <span class="text-[9px] uppercase tracking-wider font-semibold opacity-75 leading-none">Lição</span>
+                  <span class="text-lg font-black leading-tight my-0.5">{{ $lesson->numero }}</span>
+                  <span class="text-xs font-bold text-gray-600 leading-none">{{ $lesson->nivel ?? 'A1' }}</span>
                 </a>
               @endforeach
 
@@ -95,7 +110,6 @@
         <div>
           <h2 class="font-bold mb-2">Pronúncia</h2>
           <div class="bg-[#051d31] p-4 rounded-3xl shadow-xl border border-white/5 flex items-center justify-between gap-3">
-
             <button class="w-20 h-20 bg-white text-[#082A45] rounded-2xl flex flex-col items-center justify-center font-extrabold border-4 border-cyan-400 shadow-lg shrink-0 hover:scale-105 transition-transform">
               <span>N/A</span>
               <span class="font-normal leading-tight">Atual:</span>

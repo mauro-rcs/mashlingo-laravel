@@ -1,8 +1,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <x-layout>
-  <div x-data="placementQuiz(@js($questoes))" class="max-w-3xl mx-auto w-full space-y-6 my-8 px-4">
-
+  <div x-data="placementQuiz(@js($questoes))" class="relative z-10 max-w-5xl mx-auto w-full space-y-8 my-8 px-4 box-border">
     <header class="bg-[#051d31] p-6 rounded-[2rem] shadow-2xl flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-black text-white">Teste de Nivelamento</h1>

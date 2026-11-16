@@ -11,7 +11,8 @@ class ListeningLesson extends Model
         'titulo',
         'instrucao',
         'xp',
-        'categoria'
+        'categoria',
+        'nivel'
     ];
 
     public function questions()

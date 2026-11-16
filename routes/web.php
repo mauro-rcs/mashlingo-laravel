@@ -95,17 +95,11 @@ Route::middleware('auth')->group(function () {
 
 
     // ADMIN - LISTENING
-    Route::get('/admin/escuta', [ListeningLessonController::class, 'index'])
-        ->name('admin.escuta.index');
-
-    Route::post('/admin/escuta', [ListeningLessonController::class, 'store'])
-        ->name('admin.escuta.store');
-
-    Route::put('/admin/escuta/{lesson}', [ListeningLessonController::class, 'update'])
-        ->name('admin.escuta.update');
-
-    Route::delete('/admin/escuta/{lesson}', [ListeningLessonController::class, 'destroy'])
-        ->name('admin.escuta.destroy');
+    Route::get('/admin/escuta', [ListeningLessonController::class, 'index'])->name('admin.escuta.index');
+    Route::post('/admin/escuta', [ListeningLessonController::class, 'store'])->name('admin.escuta.store');
+    Route::get('/admin/escuta/{lesson}/edit', [ListeningLessonController::class, 'edit'])->name('admin.escuta.edit');
+    Route::put('/admin/escuta/{lesson}', [ListeningLessonController::class, 'update'])->name('admin.escuta.update');
+    Route::delete('/admin/escuta/{lesson}', [ListeningLessonController::class, 'destroy'])->name('admin.escuta.destroy');
 
     Route::get('/admin/placement', [PlacementQuestionController::class, 'index'])
         ->name('admin.placement.index');

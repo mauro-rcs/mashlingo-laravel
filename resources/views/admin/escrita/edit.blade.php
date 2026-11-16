@@ -1,6 +1,5 @@
 <x-layout>
-  <div class="max-w-4xl mx-auto w-full space-y-6 my-8 px-4 box-border">
-
+  <div class="relative z-10 max-w-5xl mx-auto w-full space-y-8 my-8 px-4 box-border">
     <header class="flex justify-between items-center pb-4">
       <h1 class="text-2xl font-black tracking-wide text-white">Editar Lição de Escrita – Aula {{ $lesson->numero }}</h1>
       <a href="{{ route('admin.escrita.index') }}" class="bg-[#03111d] hover:bg-[#082a45] text-white font-extrabold px-5 py-2.5 rounded-2xl border border-white/10 shadow-xl transition-all text-sm">
