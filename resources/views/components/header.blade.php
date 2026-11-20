@@ -22,6 +22,12 @@
         <span>Nivelamento</span>
       </a>
 
+      <a href="{{ route('amigos.index') }}"
+         class="flex items-center gap-2 bg-[#3598CA] hover:bg-[#2F8BB9] text-white rounded-2xl px-4 py-2 shadow-md transition-all duration-200 hover:scale-105 active:scale-95">
+        <i class='bx bx-connector text-lg'></i>
+        <span>Amigos</span>
+      </a>
+
       @if(auth()->user()->is_admin)
         <a href="{{ route('site.admin') }}"
            class="flex items-center gap-2 bg-[#3598CA] hover:bg-[#2F8BB9] text-white rounded-2xl px-4 py-2 shadow-md transition-all duration-200 hover:scale-105 active:scale-95">

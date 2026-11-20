@@ -8,6 +8,7 @@ use App\Http\Controllers\WritingLessonController;
 use App\Http\Controllers\ListeningLessonController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\FriendController;
 
 // SITE
 Route::get('/', [siteController::class, 'index'])
@@ -93,6 +94,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/escrita/{lesson}', [WritingLessonController::class, 'destroy'])
         ->name('admin.escrita.destroy');
 
+    // AMIGOS
+    Route::get('/amigos', [FriendController::class, 'index'])->name('amigos.index');
+    Route::post('/amigos', [FriendController::class, 'store'])->name('amigos.store');
+    Route::delete('/amigos/{friend}', [FriendController::class, 'destroy'])->name('amigos.destroy');
 
     // ADMIN - LISTENING
     Route::get('/admin/escuta', [ListeningLessonController::class, 'index'])->name('admin.escuta.index');

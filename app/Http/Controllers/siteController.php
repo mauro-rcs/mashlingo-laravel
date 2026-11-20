@@ -49,7 +49,13 @@ class siteController extends Controller
         $listeningLessons = \App\Models\ListeningLesson::where('categoria', $categoria)->orderBy('numero')->get();
         $writingLessons = \App\Models\WritingLesson::where('categoria', $categoria)->orderBy('numero')->get();
 
-        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons', 'categoria', 'grafico'));
+        $ranking = $user->friends()->get()
+            ->concat([$user])
+            ->sortByDesc('xp')
+            ->values()
+            ->take(5);
+
+        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons', 'categoria', 'grafico', 'ranking'));
     }
 
     public function escrita(Request $request)

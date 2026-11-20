@@ -6,12 +6,9 @@
     </header>
 
     <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
       <div class="lg:col-span-7 space-y-6">
-
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl md:text-3xl font-black tracking-wide">Minhas Aulas – Inglês</h1>
-
           <form method="GET" action="{{ route('site.taskboard') }}" class="flex items-center gap-2">
             <label for="categoria" class="font-bold text-gray-300">Temática:</label>
             <select name="categoria" id="categoria" onchange="this.form.submit()" class="bg-[#051d31] text-cyan-400 font-extrabold px-4 py-2 rounded-xl border border-white/10 focus:outline-none focus:border-cyan-400">
@@ -28,14 +25,14 @@
 
             <div class="flex items-center gap-3">
               @php
-                // Mapeamento das bordas do botão baseadas na paleta (do mais claro ao mais escuro)
+                // melhorada pra não ficar broxante
                 $niveisBordas = [
-                    'A1' => 'border-[#a9d6e5]',
-                    'A2' => 'border-[#61a5c2]',
-                    'B1' => 'border-[#3598CA]',
-                    'B2' => 'border-[#2c6298]',
-                    'C1' => 'border-[#134074]',
-                    'C2' => 'border-[#0b2545]',
+                    'A1' => 'border-[#6CC5B8]',
+                    'A2' => 'border-[#A3C96B]',
+                    'B1' => 'border-[#E3B95A]',
+                    'B2' => 'border-[#DE8F52]',
+                    'C1' => 'border-[#CC6B6B]',
+                    'C2' => 'border-[#9879B8]',
                 ];
               @endphp
 
@@ -72,12 +69,12 @@
             <div class="flex items-center gap-3">
               @php
                 $niveisBordas = [
-                    'A1' => 'border-[#a9d6e5]',
-                    'A2' => 'border-[#61a5c2]',
-                    'B1' => 'border-[#3598CA]',
-                    'B2' => 'border-[#2c6298]',
-                    'C1' => 'border-[#134074]',
-                    'C2' => 'border-[#0b2545]',
+                    'A1' => 'border-[#6CC5B8]',
+                    'A2' => 'border-[#A3C96B]',
+                    'B1' => 'border-[#E3B95A]',
+                    'B2' => 'border-[#DE8F52]',
+                    'C1' => 'border-[#CC6B6B]',
+                    'C2' => 'border-[#9879B8]',
                 ];
               @endphp
 
@@ -170,24 +167,25 @@
 
         <div class="bg-[#3598CA] p-6 rounded-3xl shadow-xl">
           <h3 class="font-extrabold text-center text-lg mb-5">Seu ranking de Amigos</h3>
-          <ul class="space-y-2 font-bold">
-            <li class="flex justify-between border-r border-white/40 pr-4">
-              <span>1. Benício</span>
-              <span class="pl-4 border-l border-white/40">200XP</span>
-            </li>
-            <li class="flex justify-between border-r border-white/40 pr-4">
-              <span>2. João</span>
-              <span class="pl-4 border-l border-white/40">168XP</span>
-            </li>
-            <li class="flex justify-between border-r border-white/40 pr-4">
-              <span>3. Silvana</span>
-              <span class="pl-4 border-l border-white/40">140XP</span>
-            </li>
-            <li class="flex justify-between border-r border-white/40 pr-4">
-              <span>4. Laura</span>
-              <span class="pl-4 border-l border-white/40">100XP</span>
-            </li>
-          </ul>
+          @if($ranking->count() <= 1)
+            <p class="text-center font-bold py-4">Você ainda não adicionou amigos.</p>
+          @else
+            <ul class="space-y-2 font-bold">
+              @foreach($ranking as $i => $pessoa)
+                @php $euMesmo = $pessoa->id === $user->id; @endphp
+                <li class="flex items-center rounded-xl px-3 py-1 {{ $euMesmo ? 'bg-[#2F8BB9]' : '' }}">
+                  <span class="flex-1 truncate">
+                    {{ $i + 1 }}. {{ \Illuminate\Support\Str::before($pessoa->name, ' ') }}
+                    @if($euMesmo) <span class="text-xs font-extrabold">(você)</span> @endif
+                  </span>
+                  <span class="w-24 text-right pl-4 border-l border-white/40">{{ $pessoa->xp ?? 0 }}XP</span>
+                </li>
+              @endforeach
+            </ul>
+          @endif
+          <a href="{{ route('amigos.index') }}" class="block text-center font-extrabold mt-5 hover:underline">
+            {{ $ranking->count() <= 1 ? 'Adicionar amigos' : 'Ver todos' }}
+          </a>
         </div>
       </div>
     </div>
