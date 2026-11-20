@@ -174,9 +174,13 @@
               @foreach($ranking as $i => $pessoa)
                 @php $euMesmo = $pessoa->id === $user->id; @endphp
                 <li class="flex items-center rounded-xl px-3 py-1 {{ $euMesmo ? 'bg-[#2F8BB9]' : '' }}">
-                  <span class="flex-1 truncate">
-                    {{ $i + 1 }}. {{ \Illuminate\Support\Str::before($pessoa->name, ' ') }}
-                    @if($euMesmo) <span class="text-xs font-extrabold">(você)</span> @endif
+                  <span class="flex-1 truncate flex items-center gap-2">
+                    <img src="{{ $pessoa->foto_perfil ? asset('storage/' . $pessoa->foto_perfil) : asset('images/user.jpg') }}"
+                         class="w-7 h-7 rounded-full border-2 border-white object-cover shrink-0">
+                    <span class="truncate">
+                      {{ $i + 1 }}. {{ \Illuminate\Support\Str::before($pessoa->name, ' ') }}
+                      @if($euMesmo) <span class="text-xs font-extrabold">(você)</span> @endif
+                    </span>
                   </span>
                   <span class="w-24 text-right pl-4 border-l border-white/40">{{ $pessoa->xp ?? 0 }}XP</span>
                 </li>

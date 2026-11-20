@@ -49,6 +49,7 @@
             <thead>
             <tr class="bg-[#03111d] text-xs font-extrabold text-cyan-400 uppercase tracking-wider">
               <th class="px-4 py-3 border-b-2 border-r-2 border-[#3598CA]">#</th>
+              <th class="px-4 py-3 border-b-2 border-r-2 border-[#3598CA]">Foto</th>
               <th class="px-4 py-3 border-b-2 border-r-2 border-[#3598CA]">Nome</th>
               <th class="px-4 py-3 border-b-2 border-r-2 border-[#3598CA] text-right">XP</th>
               <th class="px-4 py-3 border-b-2 border-[#3598CA]"></th>
@@ -56,15 +57,31 @@
             </thead>
             <tbody>
             @foreach($ranking as $i => $pessoa)
-              @php $euMesmo = $pessoa->id === $user->id; @endphp
-              <tr class="{{ $euMesmo ? 'bg-[#3598CA]' : 'bg-[#051d31]' }} text-white font-bold">
-                <td class="px-4 py-3 border-r-2 border-[#3598CA] {{ $loop->last ? '' : 'border-b-2' }}">{{ $i + 1 }}</td>
-                <td class="px-4 py-3 border-r-2 border-[#3598CA] {{ $loop->last ? '' : 'border-b-2' }}">
+              @php
+                $euMesmo = $pessoa->id === $user->id;
+                $borda = $loop->last ? '' : 'border-b-2';
+              @endphp
+              <tr class="{{ $euMesmo ? 'bg-[#2F8BB9]' : 'bg-[#051d31]' }} text-white font-bold">
+                <td class="px-4 py-3 border-r-2 border-[#3598CA] {{ $borda }}">{{ $i + 1 }}</td>
+
+                <td class="px-4 py-3 border-r-2 border-[#3598CA] {{ $borda }}">
+                  @if($pessoa->foto_perfil)
+                    <img src="{{ asset('storage/' . $pessoa->foto_perfil) }}"
+                         class="w-11 h-11 rounded-full border-2 border-cyan-400 object-cover shadow-md">
+                  @else
+                    <img src="{{ asset('images/user.jpg') }}"
+                         class="w-11 h-11 rounded-full border-2 border-white object-cover shadow-md">
+                  @endif
+                </td>
+
+                <td class="px-4 py-3 border-r-2 border-[#3598CA] {{ $borda }}">
                   {{ $pessoa->name }}
                   @if($euMesmo) <span class="text-xs font-extrabold">(você)</span> @endif
                 </td>
-                <td class="px-4 py-3 border-r-2 border-[#3598CA] text-right {{ $loop->last ? '' : 'border-b-2' }}">{{ $pessoa->xp ?? 0 }} XP</td>
-                <td class="px-4 py-3 text-right {{ $loop->last ? '' : 'border-b-2' }} border-[#3598CA]">
+
+                <td class="px-4 py-3 border-r-2 border-[#3598CA] text-right {{ $borda }}">{{ $pessoa->xp ?? 0 }} XP</td>
+
+                <td class="px-4 py-3 text-right border-[#3598CA] {{ $borda }}">
                   @unless($euMesmo)
                     <form action="{{ route('amigos.destroy', $pessoa) }}" method="POST"
                           onsubmit="return confirm('Remover {{ $pessoa->name }} dos amigos?');">
