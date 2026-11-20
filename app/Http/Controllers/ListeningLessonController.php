@@ -118,6 +118,15 @@ class ListeningLessonController extends Controller
             ->with('success', 'Lição atualizada com sucesso');
     }
 
+    public function showLesson($lesson = 1)
+    {
+        $lesson = ListeningLesson::with('questions')
+            ->where('numero', $lesson)
+            ->firstOrFail();
+
+        return view('escuta', compact('lesson'));
+    }
+
     public function destroy(ListeningLesson $lesson)
     {
         $lesson->questions()->delete();

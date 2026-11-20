@@ -123,7 +123,7 @@ class PlacementController extends Controller
         PROMPT;
 
         $response = Prism::text()
-            ->using(Provider::Ollama, self::MODELO)
+            ->using(Provider::Groq, 'openai/gpt-oss-120b')
             ->usingTemperature(0)
             ->withSystemPrompt('Você responde somente no formato pedido, sem texto extra.')
             ->withPrompt($prompt)

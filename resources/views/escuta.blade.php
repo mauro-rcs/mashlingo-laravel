@@ -37,12 +37,12 @@
                         @click="selectOption(i)"
                         :disabled="selectedOption !== null"
                         :class="{
-              'bg-[#03111d] text-white hover:bg-white/10': selectedOption === null,
-              'bg-cyan-500 text-white font-bold': selectedOption !== null && i === currentQuestion.resposta_correta,
-              'bg-cyan-800 text-white font-bold': selectedOption === i && i !== currentQuestion.resposta_correta,
-              'opacity-40': selectedOption !== null && i !== currentQuestion.resposta_correta && selectedOption !== i
-            }"
-                        class="p-4 rounded-2xl font-semibold text-left transition-all border border-white/5 flex items-center justify-between cursor-pointer">
+                          'bg-[#03111d] text-white hover:bg-[#082842]': selectedOption === null,
+                          'bg-cyan-500 text-white font-bold': selectedOption !== null && i === currentQuestion.resposta_correta,
+                          'bg-cyan-800 text-white font-bold': selectedOption === i && i !== currentQuestion.resposta_correta,
+                          'bg-[#03111d] text-gray-500': selectedOption !== null && i !== currentQuestion.resposta_correta && selectedOption !== i
+                        }"
+                        class="p-4 rounded-2xl font-bold text-left transition-all border border-[#082842] flex items-center justify-between cursor-pointer">
                         <span x-text="currentQuestion['resposta_' + i]"></span>
                         <i x-show="selectedOption !== null && i === currentQuestion.resposta_correta" class='bx bx-check-circle text-xl'></i>
                         <i x-show="selectedOption === i && i !== currentQuestion.resposta_correta" class='bx bx-x-circle text-xl'></i>

@@ -137,34 +137,35 @@
 
       <div class="lg:col-span-5 space-y-6">
         <div class="bg-[#3598CA] p-6 rounded-3xl shadow-xl text-center">
-          <h3 class="font-extrabold text-lg mb-4">Desafio do Dia</h3>
-          <div class="space-y-4 text-left font-bold">
-            <div>
-              <p class="mb-1.5">• Completar 2 lições de escrita</p>
-              <div class="flex items-center gap-2">
-                <div class="w-full bg-[#051d31]/30 rounded-full h-3">
-                  <div class="bg-[#082a45] h-3 rounded-full w-1/2"></div>
-                </div>
-                <span class="shrink-0">1/2</span>
-              </div>
-            </div>
-
-            <div>
-              <p class="mb-1.5">• Completar 1 lição de audição</p>
-              <div class="flex items-center gap-2">
-                <div class="w-full bg-white/30 rounded-full h-3"></div>
-                <span class="shrink-0">0/1</span>
-              </div>
-            </div>
-
-            <div>
-              <p class="mb-1.5">• Completar 1 lição de pronúncia</p>
-              <div class="flex items-center gap-2">
-                <div class="w-full bg-white/30 rounded-full h-3"></div>
-                <span class="shrink-0">0/1</span>
-              </div>
-            </div>
+          <h3 class="font-extrabold text-lg mb-4">Progresso em 7 Dias</h3>
+          <div class="bg-[#3598CA] p-6 rounded-3xl">
+            <canvas id="xpChart" height="140"></canvas>
           </div>
+
+          <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+          <script>
+            new Chart(document.getElementById('xpChart'), {
+              type: 'line',
+              data: {
+                labels: @json($grafico['labels']),
+                datasets: [{
+                  data: @json($grafico['data']),
+                  borderColor: '#ffffff',
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  pointBackgroundColor: '#ffffff',
+                  fill: true,
+                  tension: 0.3,
+                }]
+              },
+              options: {
+                plugins: { legend: { display: false } },
+                scales: {
+                  x: { ticks: { color: '#fff', font: { weight: 'bold' } }, grid: { display: false } },
+                  y: { ticks: { color: '#fff', font: { weight: 'bold' }, precision: 0 }, beginAtZero: true, grid: { color: 'rgba(255,255,255,0.15)' } }
+                }
+              }
+            });
+          </script>
         </div>
 
         <div class="bg-[#3598CA] p-6 rounded-3xl shadow-xl">

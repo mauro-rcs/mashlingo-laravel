@@ -15,7 +15,7 @@
       </div>
     @endif
 
-    <form action="{{route('writing.complete', $lesson->id)}}" method="POST" class="space-y-6">
+    <form action="{{route('writing.complete', $lesson)}}" method="POST" class="space-y-6">
       @csrf
 
       @php

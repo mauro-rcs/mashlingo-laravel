@@ -31,12 +31,25 @@ class siteController extends Controller
     {
         $user = auth()->user();
 
+        $dias = collect(range(6, 0))->map(fn ($i) => now()->subDays($i)->toDateString());
+
+        $xpPorDia = \App\Models\XpLog::where('user_id', $user->id)
+            ->where('created_at', '>=', now()->subDays(6)->startOfDay())
+            ->selectRaw('DATE(created_at) as dia, SUM(xp) as total')
+            ->groupBy('dia')
+            ->pluck('total', 'dia');
+
+        $grafico = [
+            'labels' => $dias->map(fn ($d) => \Carbon\Carbon::parse($d)->format('d/m'))->values(),
+            'data'   => $dias->map(fn ($d) => (int) ($xpPorDia[$d] ?? 0))->values(),
+        ];
+
         $categoria = $request->get('categoria', 'entretenimento');
 
         $listeningLessons = \App\Models\ListeningLesson::where('categoria', $categoria)->orderBy('numero')->get();
         $writingLessons = \App\Models\WritingLesson::where('categoria', $categoria)->orderBy('numero')->get();
 
-        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons', 'categoria'));
+        return view('taskboard', compact('user', 'listeningLessons', 'writingLessons', 'categoria', 'grafico'));
     }
 
     public function escrita(Request $request)
@@ -108,40 +121,41 @@ class siteController extends Controller
     public function submitWritingLesson(
         Request $request,
         WritingLesson $lesson
-    ) {
+    )
+    {
         $request->validate([
             'answers' => ['required', 'array'],
         ]);
 
         $prompt = <<<PROMPT
-Você é um professor de inglês para brasileiros.
+        Você é um professor de inglês para brasileiros.
 
-Avalie as respostas do aluno nas questões abaixo.
+        Avalie as respostas do aluno nas questões abaixo.
 
-REGRAS:
-- Verifique se a resposta transmite corretamente o significado da frase em português.
-- Aceite respostas diferentes do gabarito quando forem gramaticalmente corretas e tiverem o mesmo significado.
-- Não considere apenas diferenças de pontuação ou capitalização como erro.
-- Se houver erro, explique brevemente em português.
-- Se a resposta estiver vazia, considere incorreta.
-- Seja objetivo.
-- NÃO escreva nada fora do JSON.
+        REGRAS:
+        - Verifique se a resposta transmite corretamente o significado da frase em português.
+        - Aceite respostas diferentes do gabarito quando forem gramaticalmente corretas e tiverem o mesmo significado.
+        - Não considere apenas diferenças de pontuação ou capitalização como erro.
+        - Se houver erro, explique brevemente em português.
+        - Se a resposta estiver vazia, considere incorreta.
+        - Seja objetivo.
+        - NÃO escreva nada fora do JSON.
 
-Retorne EXATAMENTE neste formato:
+        Retorne EXATAMENTE neste formato:
 
-{
-    "questoes": [
         {
-            "id": 1,
-            "correta": true,
-            "explicacao": "",
-            "correcao": ""
+            "questoes": [
+                {
+                    "id": 1,
+                    "correta": true,
+                    "explicacao": "",
+                    "correcao": ""
+                }
+            ]
         }
-    ]
-}
 
-QUESTÕES:
-PROMPT;
+        QUESTÕES:
+        PROMPT;
 
         foreach ($lesson->questions as $question) {
             $answer = $request->input(
@@ -151,16 +165,16 @@ PROMPT;
 
             $prompt .= <<<TEXT
 
-ID: {$question->id}
-Questão: {$question->ordem}
-Frase em português: {$question->frase_portugues}
-Gabarito: {$question->resposta_correta}
-Resposta do aluno: {$answer}
-TEXT;
+        ID: {$question->id}
+        Questão: {$question->ordem}
+        Frase em português: {$question->frase_portugues}
+        Gabarito: {$question->resposta_correta}
+        Resposta do aluno: {$answer}
+        TEXT;
         }
 
         $response = Prism::text()
-            ->using(Provider::Ollama, 'llama3.1')
+            ->using(Provider::Groq, 'openai/gpt-oss-120b')
             ->withSystemPrompt(
                 'Você é um corretor de exercícios de inglês. ' .
                 'Responda APENAS em JSON puro, sem blocos de código markdown.'
@@ -198,8 +212,39 @@ TEXT;
             ->keyBy('id')
             ->toArray();
 
+        $acertouTudo = $lesson->questions->every(
+            fn($q) => ($feedback[$q->id]['correta'] ?? false) === true
+        );
+
+        $xpGanho = 0;
+
+        if ($acertouTudo) {
+            WritingProgress::updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'lesson' => $lesson->id,
+                ],
+                [
+                    'completed' => true,
+                    'completed_at' => now(),
+                ]
+            );
+
+            auth()->user()->increment('xp', $lesson->xp);
+
+            \App\Models\XpLog::create([
+                'user_id'   => auth()->id(),
+                'tipo'      => 'escrita',
+                'lesson_id' => $lesson->id,
+                'xp'        => $lesson->xp,
+            ]);
+
+            $xpGanho = $lesson->xp;
+        }
+
         return back()
             ->with('feedback', $feedback)
-            ->with('old_answers', $request->input('answers'));
+            ->with('old_answers', $request->input('answers'))
+            ->with('xp_ganho', $xpGanho);
     }
 }
